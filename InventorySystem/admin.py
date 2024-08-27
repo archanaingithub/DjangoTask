@@ -12,11 +12,16 @@ class CategoryAdmin(admin.ModelAdmin):
     ]
 
     list_per_page = 10
+    list_display_links = [
+        "id",
+        "name",
+    ]
 
 
 @admin.register(models.Customer)
 class CustomerAdmin(admin.ModelAdmin):
     list_display = [
+        "id",
         "name",
         "email",
     ]
@@ -29,8 +34,10 @@ class CustomerAdmin(admin.ModelAdmin):
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = [
+        "id",
         "name",
         "price",
+        "category",
         "description",
     ]
     search_fields = [
@@ -46,14 +53,14 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(models.Sale)
 class SalesAdmin(admin.ModelAdmin):
     list_display = [
-        "customer",
+        "user",
         "product",
         "price",
         "sales_date",
     ]
 
     list_per_page = 10
-    list_display_links = ["product", "customer"]
+    list_display_links = ["product",]
 
 
 @admin.register(models.Order)
@@ -61,7 +68,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = [
         "id",
         "user",
-        "order_status",
+        "status",
     ]
 
     class OrderItemInLine(admin.TabularInline):
@@ -71,22 +78,10 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInLine]
 
 
-@admin.register(models.Inventory)
-class InventoryAdmin(admin.ModelAdmin):
-    list_display = [
-        "product",
-        "quantity_in_stock",
-    ]
-
-    list_per_page = 5
-    list_filter = [
-        "product",
-    ]
-
-
 @admin.register(models.Supplier)
 class SupplierAdmin(admin.ModelAdmin):
     list_display = [
+        "id",
         "name",
         "email",
     ]
@@ -98,4 +93,14 @@ class SupplierAdmin(admin.ModelAdmin):
     ]
     list_filter = [
         "name",
+    ]
+
+
+@admin.register(models.Stock)
+class StockAdmin(admin.ModelAdmin):
+    list_display = [
+        "id",
+        "product",
+        "quantity",
+        "time_stamp",
     ]

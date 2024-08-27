@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from random import randint
 from .models import AbstractUser
 from django.core.mail import send_mail
-from django.conf import settings
+# from django.conf import settings
 
 
 User = get_user_model()
@@ -32,15 +32,17 @@ class UserRegisterSerializer(serializers.Serializer):
 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
-            raise serializers.ValidationError("user with this email already exists")
+            raise serializers.ValidationError(
+                "user with this email already exists"
+                )
         return value
 
-    def validate_password(self, attrs):
+    def validate(self, attrs):
         if attrs["password"] != attrs["confirm_password"]:
             raise serializers.ValidationError(
                 "password and confirm_password do not match"
             )
-        return super().validate_password(attrs)
+        return super().validate(attrs)
 
     def create(self, validated_data, *args, **kwargs):
         user = User.objects.create_user(
@@ -54,8 +56,8 @@ class UserRegisterSerializer(serializers.Serializer):
         user.save()
         subject = "Activate your account"
         message = f"""
-        {User.username} your account has been registered.
-        otp for activating your account is {User.otp}
+        {user.username} your account has been registered.
+        otp for activating your account is {user.otp}
         """
 
         email_from = "myims@gmail.com"
@@ -82,7 +84,7 @@ class UserActivationSerializer(serializers.Serializer):
     otp = serializers.IntegerField()
 
 
-class ForgetPasswordSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    current_password = serializers.CharField()
-    new_password = serializers.CharField()
+# class ForgetPasswordSerializer(serializers.Serializer):
+#     email = serializers.EmailField()
+#     current_password = serializers.CharField()
+#     new_password = serializers.CharField()
